@@ -35,6 +35,7 @@ public class TwitterScrapePanel extends JPanel {
 
         try {
             File target = new File(targetFilename.getFieldText() + ".csv");
+
             target.getCanonicalPath();
             if(target.exists()) {
                 Helpers.PopupText("Error: " + target + " already exists. Move/Delete it first.");
@@ -53,11 +54,11 @@ public class TwitterScrapePanel extends JPanel {
     public TwitterScrapePanel() {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(new JLabel("Twitter Scrape: set the beginning day, the ending day, and the twitter username to target, then hit go!"));
-        this.add(new JLabel("WARNING: this uses selinum and requires chromium installed (it puppets chromium during the scrape)."));
+        this.add(new JLabel("WARNING: this uses selinum and requires chrom(ium) installed (it puppets chromium during the scrape)."));
         this.add(new JLabel("I estimate it takes about 15 minutes per month to scrape, due to having to go slow to not freak out twitter."));
 
-        this.add((Component) startDay);
-        this.add((Component) endDay);
+        this.add(startDay);
+        this.add(endDay);
         this.add(targetUser);
         this.add(targetFilename);
         this.add(new JLabel("When it's done, there'll be a popup. Also progress noise happens in stdout."));

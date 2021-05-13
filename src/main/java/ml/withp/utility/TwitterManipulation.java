@@ -26,7 +26,7 @@ public class TwitterManipulation {
     private static final Pattern SCRAPE_PATTERN = Pattern.compile(
             //I'm all ears for a cleaner regex for this.
             //that said as is it's Author, Day, Payload.
-            "</span></div><a href=\"/(.+?)/status/\\d+\" dir=\"auto\" aria-label=\"(.+?)\".+?<span.+?>(.+?)</span></div>");
+            "</span></div><a href=\"/(.+?)/status/\\d+\" dir=\"auto\" aria-label=\"(.+?)\".+?<span.+?>(.+?)</span></div></div>");
 
     private static final List<Pattern> STOP_PATTERNS = new ArrayList<>();
     static {
@@ -43,10 +43,11 @@ public class TwitterManipulation {
     }
 
     private static final String[] URL_CONSTANTS =
-            {"https://twitter.com/search?f=tweets&vertical=default&q=from%3A",
-                    "%20until%3A",
+            {"https://twitter.com/search?lang=en&q=(from%3A",
+                    ")%20until%3A",
                     "%20since%3A",
-                    "&src=typd"};
+                    "&src=typed_query"};
+
 
     private static String formURL(String target, Date targetDay) {
         return URL_CONSTANTS[0] + target +
@@ -143,6 +144,7 @@ public class TwitterManipulation {
             for(Pattern p : STOP_PATTERNS) {
                 if(p.matcher(twt.getData()).matches()) {
                     cont = true;
+                    System.out.println("STOPLIST SKIP: " + twt);
                     break;
                 }
             }
