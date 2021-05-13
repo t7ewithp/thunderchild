@@ -31,6 +31,7 @@ public class DateUtils {
         int year = pkr.getModel().getYear();
         Calendar cal = Calendar.getInstance(TimeZone.getDefault());
         cal.clear();
+        //noinspection MagicConstant
         cal.set(year,month,day);
         return cal.getTime();
     }

@@ -6,6 +6,7 @@ import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class Loader {
     public static InputStream resourceStream(String filename) {
@@ -13,21 +14,29 @@ public class Loader {
         return classloader.getResourceAsStream(filename);
     }
 
+    public static InputStreamReader makeUtfISR(File f) {
+        try {
+            return new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8);
+        }catch (FileNotFoundException e) {
+            return null;
+        }
+    }
+
     public static boolean mergeCSV(File mergeOne, File mergeTwo, String outputPath) {
         try (PrintWriter out = new PrintWriter(outputPath)){
             CSVPrinter printer = new CSVPrinter(out, CSVFormat.RFC4180);
-            CSVParser inputOne = CSVFormat.RFC4180.parse(new FileReader(mergeOne));
+            CSVParser inputOne = CSVFormat.RFC4180.parse(makeUtfISR(mergeOne));
             for(CSVRecord rec : inputOne) {
                 printer.printRecord(rec);
             }
             inputOne.close();
-            CSVParser inputTwo = CSVFormat.RFC4180.parse(new FileReader(mergeTwo));
+            CSVParser inputTwo = CSVFormat.RFC4180.parse(makeUtfISR(mergeTwo));
             for(CSVRecord rec : inputTwo) {
                 printer.printRecord(rec);
             }
             inputTwo.close();
             out.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }

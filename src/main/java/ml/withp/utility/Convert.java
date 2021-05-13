@@ -8,10 +8,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -49,9 +46,7 @@ public class Convert {
     public static void fileCSVToSTM(String path) throws IOException {
         final File inpFile = new File(path + ".csv");
         final Path outPath = Paths.get(path + ".stm");
-        CSVParser inputParser = CSVFormat.RFC4180.parse(new FileReader(inpFile));
-
-
+        CSVParser inputParser = CSVFormat.RFC4180.parse(Loader.makeUtfISR(inpFile));
         JSONArray core = LstToSTM(loadCSV(inputParser, 0));
         String out = core.toJSONString();
         Files.write(outPath, out.getBytes(CHARSET), StandardOpenOption.CREATE);
@@ -66,7 +61,7 @@ public class Convert {
     }
 
     public static void dumpCSV(List<Tweet> tweets, String filename) {
-        try (PrintWriter out = new PrintWriter(filename)){
+        try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_8))){
             CSVPrinter printer = new CSVPrinter(out, CSVFormat.RFC4180);
             for(Tweet t : tweets) {
                 printer.print(t.getData());
