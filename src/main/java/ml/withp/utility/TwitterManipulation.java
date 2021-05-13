@@ -91,6 +91,7 @@ public class TwitterManipulation {
 
             String url = formURL(target, currentDate);
             String raw = rawScrape(url, driver);
+            if(raw == null) continue;
             output.addAll(Objects.requireNonNull(scrapeTweets(target, raw)));
         }
         return output;
@@ -100,13 +101,13 @@ public class TwitterManipulation {
     private static String rawScrape(String url, WebDriver driver) {
         try {
             driver.get(new URL(url).toString());
-            new WebDriverWait(driver, Duration.ZERO.plusMillis(WAIT_TIME)).until(
+            new WebDriverWait(driver, Duration.ZERO.plusMillis(WAIT_TIME * 100)).until(
                     webDriver ->
                             ((JavascriptExecutor) webDriver).executeScript
                                     ("return document.readyState").equals("complete"));
             scrollToBottom(driver);
             return driver.getPageSource();
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

@@ -52,7 +52,7 @@ public class Convert {
         CSVParser inputParser = CSVFormat.RFC4180.parse(new FileReader(inpFile));
 
 
-        JSONArray core = LstToSTM(loadCSV(inputParser, 2));
+        JSONArray core = LstToSTM(loadCSV(inputParser, 0));
         String out = core.toJSONString();
         Files.write(outPath, out.getBytes(CHARSET), StandardOpenOption.CREATE);
     }
@@ -69,9 +69,9 @@ public class Convert {
         try (PrintWriter out = new PrintWriter(filename)){
             CSVPrinter printer = new CSVPrinter(out, CSVFormat.RFC4180);
             for(Tweet t : tweets) {
-                printer.print(t.getAuthor());
-                printer.print(t.getDay());
                 printer.print(t.getData());
+                printer.print(t.getDay());
+                printer.print(t.getAuthor());
                 printer.println();
             }
             printer.flush();
