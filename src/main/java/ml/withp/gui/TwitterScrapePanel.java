@@ -1,26 +1,20 @@
 package ml.withp.gui;
 
-import jdk.nashorn.internal.scripts.JD;
 import ml.withp.ThunderChildMain;
 import ml.withp.ml.withp.model.Tweet;
 import ml.withp.utility.Convert;
 import ml.withp.utility.DateUtils;
 import ml.withp.utility.TwitterManipulation;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Properties;
 
 public class TwitterScrapePanel extends JPanel {
-    private LabeledJDatePicker startDay = new LabeledJDatePicker("Start Day: ");
-    private LabeledJDatePicker endDay = new LabeledJDatePicker("End Day: ");
-    private LabeledTextField targetUser = new LabeledTextField("Twitter Username Target: ");
-    private LabeledTextField targetFilename = new LabeledTextField("Output Filename: ");
+    private final LabeledJDatePicker startDay = new LabeledJDatePicker("Start Day: ");
+    private final LabeledJDatePicker endDay = new LabeledJDatePicker("End Day: ");
+    private final LabeledTextField targetUser = new LabeledTextField("Twitter Username Target: ");
+    private final LabeledTextField targetFilename = new LabeledTextField("Output Filename: ");
 
     private boolean sanityCheck() {
         if(startDay.getDate().compareTo(endDay.getDate()) >= 0) {

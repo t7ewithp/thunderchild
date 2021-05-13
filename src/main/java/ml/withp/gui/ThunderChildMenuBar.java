@@ -1,8 +1,6 @@
 package ml.withp.gui;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class ThunderChildMenuBar extends JMenuBar {
     private final JFrame host;

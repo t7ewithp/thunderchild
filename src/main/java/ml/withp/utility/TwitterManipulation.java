@@ -8,7 +8,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -137,6 +136,7 @@ public class TwitterManipulation {
                     replaceAll("</link>","").
                     replaceAll("<video.*?>","").
                     replaceAll("</video>", "").
+                    replaceAll("&amp;", "&").
                     replaceAll("<svg.+?>","");
 
             Tweet twt = new Tweet(mtchr.group(1), cleanedBody.trim(), DateUtils.twtToDate(mtchr.group(2)));

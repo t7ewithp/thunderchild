@@ -7,16 +7,14 @@ import org.jdatepicker.JDatePicker;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Date;
-import java.util.Properties;
 
 public class LabeledJDatePicker extends JPanel {
-    private JLabel lbl;
-    private JDatePicker picker;
+    private final JDatePicker picker;
 
     public LabeledJDatePicker(String label) {
         JDateComponentFactory fac = new JDateComponentFactory();
         picker = fac.createJDatePicker();
-        lbl = new JLabel(label);
+        JLabel lbl = new JLabel(label);
         this.add(lbl);
         this.add((Component) picker);
     }
