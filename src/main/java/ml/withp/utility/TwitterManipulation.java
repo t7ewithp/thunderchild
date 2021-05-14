@@ -139,7 +139,14 @@ public class TwitterManipulation {
                     replaceAll("&amp;", "&").
                     replaceAll("<svg.+?>","");
 
-            Tweet twt = new Tweet(mtchr.group(1), cleanedBody.trim(), DateUtils.twtToDate(mtchr.group(2)));
+            Date date = DateUtils.wrongDate();
+            try {
+                date = DateUtils.twtToDate(mtchr.group(2));
+            } catch(Exception e) {
+                System.out.println("Error: " + mtchr.group(2) + " is not a date. Ignoring...");
+            }
+
+            Tweet twt = new Tweet(mtchr.group(1), cleanedBody.trim(), date);
             if(!twt.getAuthor().equalsIgnoreCase(targetUser) || twt.getData().length() == 0) continue;
             boolean cont = false;
             for(Pattern p : STOP_PATTERNS) {

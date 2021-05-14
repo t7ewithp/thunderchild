@@ -12,13 +12,16 @@ public class STMGeneratorPanel extends JPanel {
     private final LabeledTextField inputFile =
             new LabeledTextField("Input File:","data/");
 
+    private final LabeledTextField messageSpeed =
+            new LabeledTextField("Message Speed:", "1.0");
+
+
     private final LabeledTextField mergeOne =
             new LabeledTextField("Merge CSV 1:","data/");
     private final LabeledTextField mergeTwo =
             new LabeledTextField("Merge CSV 2:","data/");
     private final LabeledTextField mergeTarget =
             new LabeledTextField("Output CSV Name:","data/");
-
 
     private static void setCST(int x, int y, GridBagConstraints cst) {
         cst.gridx = x;
@@ -52,6 +55,8 @@ public class STMGeneratorPanel extends JPanel {
 
     private boolean validateSTMGeneratingFields() {
         cleanTextbox(inputFile, ".csv");
+        cleanTextbox(messageSpeed, "");
+
         File target = new File(inputFile.getFieldText() + ".csv");
         if(target.isFile()) {
             File outTarget = new File(inputFile.getFieldText() + ".stm");
@@ -60,6 +65,17 @@ public class STMGeneratorPanel extends JPanel {
                         + outTarget + " already exists! (If you already knew that, move/delete it...)");
                 return false;
             }
+            try {
+                double d = Double.parseDouble(messageSpeed.getFieldText());
+                if(d <= 0) {
+                    Helpers.PopupText("Error! Speed must be > 0");
+                    return false;
+                }
+            } catch(NumberFormatException e) {
+                Helpers.PopupText("Error! Couldn't parse speed.");
+                return false;
+            }
+
           return true;
         }
             Helpers.PopupText("Error! " + target + " does not exist!");
@@ -77,7 +93,7 @@ public class STMGeneratorPanel extends JPanel {
         generate.addActionListener(e -> {
             if(validateSTMGeneratingFields()){
                 try {
-                    Convert.fileCSVToSTM(inputFile.getFieldText());
+                    Convert.fileCSVToSTM(inputFile.getFieldText(), Double.parseDouble(messageSpeed.getFieldText()));
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                     Helpers.PopupText("It didn't work (either bad csv or cannot write output file, check console output for stack trace.)");
@@ -105,8 +121,12 @@ public class STMGeneratorPanel extends JPanel {
         setCST(xPos++, yPos, cst);
         add(inputFile, cst);
 
+        setCST(xPos++,yPos, cst);
+        add(messageSpeed, cst);
+
         setCST(xPos--, yPos++, cst);
         add(generate,cst);
+        xPos--;
 
         setCST(xPos, yPos++, cst);
         add(Box.createVerticalStrut(10),cst);

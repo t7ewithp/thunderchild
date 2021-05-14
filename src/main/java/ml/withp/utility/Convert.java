@@ -22,32 +22,34 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public class Convert {
     private static final Charset CHARSET = StandardCharsets.UTF_8;
-    private static final int PADDING = 1;
-    private static final JSONObject frontPixelGap = new JSONObject();
-    private static final JSONObject backPixelGap = new JSONObject();
-    private static final JSONObject overrides = new JSONObject();
 
-    static {
-        frontPixelGap.put("partType", "Pixel Gap");
-        frontPixelGap.put("sortOrder", 1);
-        frontPixelGap.put("value", PADDING);
-        backPixelGap.put("partType", "Pixel Gap");
-        backPixelGap.put("sortOrder", 3);
-        backPixelGap.put("value", PADDING);
+    public static JSONObject makePad(int len, int order) {
+        JSONObject obj = new JSONObject();
+        obj.put("partType", "Pixel Gap");
+        obj.put("sortOrder", order);
+        obj.put("value", len);
+        return obj;
+    }
+
+    public static JSONObject makeSpeedOverride(String txt, double speed) {
+        JSONObject overrides = new JSONObject();
+        //this is for later, but it's worthless right now.
         for(String s : new String[]{
-                "duration", "intermission", "scrollSpeed", "font",
+                "duration", "intermission", "font",
                 "fontSize", "fontColor", "arrival", "departure",
                 "alignment"}) {
             overrides.put(s,"");
         }
         for(String s: new String[]{"bold","italic","overstrike"}) overrides.put(s, false);
+
+        return overrides;
     }
 
-    public static void fileCSVToSTM(String path) throws IOException {
+    public static void fileCSVToSTM(String path, double speed) throws IOException {
         final File inpFile = new File(path + ".csv");
         final Path outPath = Paths.get(path + ".stm");
         CSVParser inputParser = CSVFormat.RFC4180.parse(Loader.makeUtfISR(inpFile));
-        JSONArray core = LstToSTM(loadCSV(inputParser, 0));
+        JSONArray core = LstToSTM(loadCSV(inputParser, 0), speed);
         String out = core.toJSONString();
         Files.write(outPath, out.getBytes(CHARSET), StandardOpenOption.CREATE);
     }
@@ -76,26 +78,34 @@ public class Convert {
         }
     }
 
-    public static JSONArray LstToSTM(List<String> input) {
+    public static JSONArray LstToSTM(List<String> input, double speed) {
+        JSONArray core = new JSONArray();
+        int maxLen = input.get(0).length();
+        for(int i = 1; i < input.size(); i++) {
+            int nuL = input.get(i).length();
+            if(nuL > maxLen) maxLen = nuL;
+        }
 
-    JSONArray core = new JSONArray();
         for(int i = 0; i < input.size(); i++) {
+            String elm = input.get(i);
+            int padding = maxLen - elm.length();
+
         JSONObject part = new JSONObject();
         part.put("nickname", Integer.toString(i));
         part.put("sortOrder", Integer.toString(i));
 
         JSONArray subPart = new JSONArray();
-        if(PADDING > 0) subPart.add(frontPixelGap);
+        if(padding > 0) subPart.add(makePad(padding / 2, 1));
         JSONObject payload = new JSONObject();
 
         payload.put("partType", "Text");
         payload.put("sortOrder", 2);
-        payload.put("value", input.get(i));
+        payload.put("value", elm);
         subPart.add(payload);
-        if(PADDING > 0) subPart.add(backPixelGap);
+        if(padding > 0) subPart.add(makePad(padding / 2, 3));
 
         part.put("parts", subPart);
-        part.put("overrides", overrides);
+        part.put("overrides", makeSpeedOverride(elm, speed));
         core.add(part);
     }
     return core;

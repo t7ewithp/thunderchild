@@ -57,6 +57,10 @@ public class DateUtils {
         return ldToDate(LocalDate.now());
     }
 
+    public static Date wrongDate() {
+        return addDays(ldToDate(LocalDate.now()),-1500);
+    }
+
     private static int getMonth(String monthStr) {
         try {
             Date d = new SimpleDateFormat("MMM", Locale.ENGLISH).parse(monthStr);
@@ -76,6 +80,8 @@ public class DateUtils {
     }
 
     public static Date twtToDate(String twtString) {
+        if(twtString.contains("hours ago")) return now(); //close enough at least
+
         String[] parts = twtString.trim().replaceAll(",", "").split(" ");
         int year;
 
