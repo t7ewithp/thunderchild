@@ -1,4 +1,4 @@
-package ml.withp.ml.withp.model;
+package ml.withp.model;
 import java.util.Date;
 
 public class Tweet {

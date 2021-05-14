@@ -1,6 +1,6 @@
 package ml.withp.utility;
 
-import ml.withp.ml.withp.model.Tweet;
+import ml.withp.model.Tweet;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;

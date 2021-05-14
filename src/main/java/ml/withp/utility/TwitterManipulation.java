@@ -1,6 +1,6 @@
 package ml.withp.utility;
 
-import ml.withp.ml.withp.model.Tweet;
+import ml.withp.model.Tweet;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;

@@ -1,7 +1,7 @@
 package ml.withp.gui;
 
 import ml.withp.ThunderChildMain;
-import ml.withp.ml.withp.model.Tweet;
+import ml.withp.model.Tweet;
 import ml.withp.utility.Convert;
 import ml.withp.utility.DateUtils;
 import ml.withp.utility.TwitterManipulation;
