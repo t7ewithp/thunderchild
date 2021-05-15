@@ -7,6 +7,9 @@ import org.apache.commons.csv.CSVRecord;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class Loader {
     public static InputStream resourceStream(String filename) {
@@ -42,4 +45,20 @@ public class Loader {
         }
         return true;
     }
+
+    public static List<Pattern> loadPatterns(String path) {
+        List<Pattern> ret = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                        Loader.resourceStream(path), StandardCharsets.UTF_8));
+        try {
+            for (String l; (l = reader.readLine()) != null; ) {
+                ret.add(Pattern.compile(l));
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
 }
+

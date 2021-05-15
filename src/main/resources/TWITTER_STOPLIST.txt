@@ -1,4 +1,3 @@
 ^@\S+$
 ^@\S+\s+and\s+@\S+(\d+)?$
 ^(@\S+\s+)?\w+\S?$
-Quote\s+Tweet
