@@ -1,8 +1,8 @@
 package ml.withp.utility;
 
+import ml.withp.model.Tweet;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 
 import java.io.*;
@@ -25,24 +25,37 @@ public class Loader {
         }
     }
 
+    public static Tweet toTweet(CSVRecord csvRaw) {
+        return new Tweet(csvRaw.get(2),csvRaw.get(0),DateUtils.dumpToDate(csvRaw.get(1)));
+    }
+
     public static boolean mergeCSV(File mergeOne, File mergeTwo, String outputPath) {
-        try (PrintWriter out = new PrintWriter(outputPath)){
-            CSVPrinter printer = new CSVPrinter(out, CSVFormat.RFC4180);
+        List<Tweet> tweets = new ArrayList<>();
+        try {
             CSVParser inputOne = CSVFormat.RFC4180.parse(makeUtfISR(mergeOne));
-            for(CSVRecord rec : inputOne) {
-                printer.printRecord(rec);
+            for (CSVRecord rec : inputOne) {
+                Tweet t = toTweet(rec);
+                if (!tweets.contains(t)) tweets.add(t);
             }
             inputOne.close();
-            CSVParser inputTwo = CSVFormat.RFC4180.parse(makeUtfISR(mergeTwo));
-            for(CSVRecord rec : inputTwo) {
-                printer.printRecord(rec);
-            }
-            inputTwo.close();
-            out.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("ERROR: Couldn't load tweets from first merge file!");
             return false;
         }
+
+        try {
+            CSVParser inputTwo = CSVFormat.RFC4180.parse(makeUtfISR(mergeTwo));
+            for(CSVRecord rec : inputTwo) {
+                Tweet t = toTweet(rec);
+                if (!tweets.contains(t)) tweets.add(t);
+            }
+            inputTwo.close();
+        } catch (IOException e) {
+            System.out.println("ERROR: Couldn't load tweets from second merge file!");
+            return false;
+        }
+
+        Convert.dumpCSV(tweets, outputPath);
         return true;
     }
 

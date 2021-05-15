@@ -94,6 +94,15 @@ public class DateUtils {
         return cal.getTime();
     }
 
+    public static Date dumpToDate(String dump) {
+        String[] comps = dump.split(" ");
+        Calendar cal = Calendar.getInstance();
+        cal.clear();
+        //noinspection MagicConstant
+        cal.set(Integer.parseInt(comps[comps.length - 1]),getMonth(comps[1]), Integer.parseInt(comps[2]));
+        return cal.getTime();
+    }
+
     private static Date ldToDate(LocalDate ld) {
         return Date.from(ld.atStartOfDay(TimeZone.getDefault().toZoneId()).toInstant());
     }
