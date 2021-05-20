@@ -14,7 +14,7 @@ public class YoutubeScrapePanel extends JPanel {
 
     private boolean sanityCheck() {
         String txt = targetVid.getFieldText().trim();
-        txt = txt.replaceAll("https://www.youtube.com/watch\\?v=","");
+        txt = txt.replaceAll("(https://)?(www\\.)?youtube\\.com/watch\\?v=","");
         targetVid.setFieldText(txt);
 
         if(txt.length() != 11) {
