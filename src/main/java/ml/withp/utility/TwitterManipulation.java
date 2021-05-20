@@ -19,8 +19,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TwitterManipulation {
-    private static final String SCROLL_SCRIPT = "window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight)";
-    private static final int WAIT_TIME = 15000;
 
     private static final Pattern SCRAPE_PATTERN = Pattern.compile(
             //I'm all ears for a cleaner regex for this.
@@ -42,18 +40,6 @@ public class TwitterManipulation {
                 URL_CONSTANTS[1] + DateUtils.formatDay(targetDay) +
                 URL_CONSTANTS[2] + DateUtils.formatDay(DateUtils.addDays(targetDay, -1)) +
                 URL_CONSTANTS[3];
-    }
-
-    private static long scrollHeight(JavascriptExecutor ex) {
-        Object o = ex.executeScript("return document.documentElement.scrollHeight");
-        if(o instanceof Long) return (Long) o;
-        return -1; //or throw.
-    }
-
-    private static void scrollOnce(WebDriver driver) {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript(SCROLL_SCRIPT);
-
     }
 
     public static List<Tweet> scrape(String target, Date startDate, Date endDate, WebDriver driver) {
@@ -78,7 +64,7 @@ public class TwitterManipulation {
 
         try {
             driver.get(new URL(url).toString());
-            new WebDriverWait(driver, Duration.ZERO.plusMillis(WAIT_TIME * 100)).until(
+            new WebDriverWait(driver, Duration.ZERO.plusMillis(ScrapeUtils.WAIT_TIME * 100)).until(
                     webDriver ->
                             ((JavascriptExecutor) webDriver).executeScript
                                     ("return document.readyState").equals("complete"));
@@ -86,8 +72,8 @@ public class TwitterManipulation {
             output.add(driver.getPageSource());
             final int PASSES = 10;
             for(int i = 0; i < PASSES; i++) {
-                scrollOnce(driver);
-                Thread.sleep(WAIT_TIME / PASSES);
+                ScrapeUtils.scrollOnce(driver);
+                Thread.sleep(ScrapeUtils.WAIT_TIME / PASSES);
                 output.add(driver.getPageSource());
             }
         } catch (Exception e) {

@@ -40,7 +40,8 @@ public class ThunderChildMenuBar extends JMenuBar {
 
         JMenuItem youtubeScraper = new JMenuItem("Youtube Scrape");
         youtubeScraper.addActionListener(e -> {
-            //todo
+            host.setContentPane(new YoutubeScrapePanel());
+            host.pack();
         });
         modules.add(csvManip);
         modules.add(twitterScraper);

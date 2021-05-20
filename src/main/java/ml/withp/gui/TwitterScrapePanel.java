@@ -60,7 +60,7 @@ public class TwitterScrapePanel extends JPanel {
         goButton.addActionListener(e -> {
             if(!sanityCheck()) {
                 List<Tweet> tweets = TwitterManipulation.scrape(targetUser.getFieldText(), startDay.getDate(), endDay.getDate(), ThunderChildMain.wDriver);
-                Convert.dumpCSV(tweets, targetFilename.getFieldText() + ".csv");
+                Convert.dumpTweetCSV(tweets, targetFilename.getFieldText() + ".csv");
                 Helpers.PopupText("It worked!... Probably?");
             }
         });

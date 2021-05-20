@@ -39,7 +39,7 @@ public class Tweet {
         if(o == null) return false;
         if(this.getClass() != o.getClass()) return false;
         Tweet t = (Tweet) o;
-        return t.author.equals(this.author)
+        return t.getAuthor().equals(this.author)
                 && t.getDay().equals(this.day)
                 && t.getData().equals(this.data);
     }

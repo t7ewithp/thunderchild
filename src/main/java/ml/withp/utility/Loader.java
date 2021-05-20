@@ -55,7 +55,7 @@ public class Loader {
             return false;
         }
 
-        Convert.dumpCSV(tweets, outputPath);
+        Convert.dumpTweetCSV(tweets, outputPath);
         return true;
     }
 

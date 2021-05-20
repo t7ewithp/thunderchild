@@ -35,11 +35,12 @@ public class Convert {
         JSONObject overrides = new JSONObject();
         //this is for later, but it's worthless right now.
         for(String s : new String[]{
-                "duration", "intermission", "font",
+                "duration", "intermission", "scrollSpeed", "font",
                 "fontSize", "fontColor", "arrival", "departure",
                 "alignment"}) {
             overrides.put(s,"");
         }
+
         for(String s: new String[]{"bold","italic","overstrike"}) overrides.put(s, false);
 
         return overrides;
@@ -62,7 +63,20 @@ public class Convert {
         return lst;
     }
 
-    public static void dumpCSV(List<Tweet> tweets, String filename) {
+    public static void dumpRawCSV(List<String> raws, String filename) {
+        try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_8))){
+            CSVPrinter printer = new CSVPrinter(out, CSVFormat.RFC4180);
+            for(String raw : raws) {
+                printer.print(raw);
+                printer.println();
+            }
+            printer.flush();
+            printer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void dumpTweetCSV(List<Tweet> tweets, String filename) {
         try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_8))){
             CSVPrinter printer = new CSVPrinter(out, CSVFormat.RFC4180);
             for(Tweet t : tweets) {
@@ -80,29 +94,23 @@ public class Convert {
 
     public static JSONArray LstToSTM(List<String> input, double speed) {
         JSONArray core = new JSONArray();
-        int maxLen = input.get(0).length();
-        for(int i = 1; i < input.size(); i++) {
-            int nuL = input.get(i).length();
-            if(nuL > maxLen) maxLen = nuL;
-        }
 
         for(int i = 0; i < input.size(); i++) {
             String elm = input.get(i);
-            int padding = maxLen - elm.length();
 
         JSONObject part = new JSONObject();
-        part.put("nickname", Integer.toString(i));
+        part.put("nickname", Integer.toString(i,Character.MAX_RADIX));
         part.put("sortOrder", Integer.toString(i));
 
         JSONArray subPart = new JSONArray();
-        if(padding > 0) subPart.add(makePad(padding / 2, 1));
+       // if(padding > 0) subPart.add(makePad(padding / 4 + 4, 1));
         JSONObject payload = new JSONObject();
 
         payload.put("partType", "Text");
         payload.put("sortOrder", 2);
         payload.put("value", elm);
         subPart.add(payload);
-        if(padding > 0) subPart.add(makePad(padding / 2, 3));
+        //if(padding > 0) subPart.add(makePad(padding / 4 + 4, 3));
 
         part.put("parts", subPart);
         part.put("overrides", makeSpeedOverride(elm, speed));
