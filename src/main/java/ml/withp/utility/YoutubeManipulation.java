@@ -45,7 +45,7 @@ public class YoutubeManipulation {
         } catch(Exception ignored) { }
 
         for(WebElement raw : rawComments) {
-            ret.add(raw.getText());
+            ret.add(raw.getText().trim());
         }
 
         ScrapeUtils.scrollOnce(d);
@@ -64,6 +64,10 @@ public class YoutubeManipulation {
                     webDriver ->
                             ((JavascriptExecutor) webDriver).executeScript
                                     ("return document.readyState").equals("complete"));
+            try {
+                WebElement video = driver.findElement(By.id("id video"));
+                video.click();
+            } catch(Exception ignored) {}
 
             ScrapeUtils.partialScroll(driver);
             Thread.sleep(ScrapeUtils.WAIT_TIME / 5);
@@ -76,7 +80,7 @@ public class YoutubeManipulation {
                 oldCommentLen = comments.size();
                 List<String> candidates = pass(driver);
                 for(String candidate : candidates) {
-                    if (!comments.contains(candidate)) {
+                    if (!comments.contains(candidate) && candidate.length() > 0) {
                         comments.add(candidate);
                     }
                 }
