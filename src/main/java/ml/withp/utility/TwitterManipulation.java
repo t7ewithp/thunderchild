@@ -87,8 +87,10 @@ public class TwitterManipulation {
         List<Tweet> tweets = new ArrayList<>();
         Matcher mtchr = SCRAPE_PATTERN.matcher(rawPage);
         while(mtchr.find()) {
-            //TODO do this somewhere elsewhere and cleaner
+            //this is functionally part of filterlist
+            //but it's safer to do it this way than to just remove all 'amp;'s
             String cleanedBody = mtchr.group(3).replaceAll("&amp;", "&");
+
             for(Pattern p : FILTER_PATTERNS)
                 cleanedBody = p.matcher(cleanedBody).replaceAll("");
             cleanedBody = cleanedBody.trim();

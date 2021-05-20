@@ -1,6 +1,5 @@
 package ml.withp.utility;
 
-import ml.withp.model.YTComment;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -27,17 +26,20 @@ public class YoutubeManipulation {
         for(WebElement raw : replyButtons) {
             try {
                 raw.click();
-            } catch(Exception e) {
-                //don't care :)
-            }
+                Thread.sleep(10);
+            } catch(Exception ignored) {}
         }
     }
 
-    private static List<String> pass(WebDriver d) throws InterruptedException {
+    private static void clickVideo(WebDriver d) {
+        try {
+            WebElement video = d.findElement(By.id("id video"));
+            video.click();
+        } catch(Exception ignored) {}
+    }
+
+    private static List<String> getCommentsByXpath(WebDriver d) {
         List<String> ret = new ArrayList<>();
-        clickAllReplies(d);
-
-
         List<WebElement> rawComments = new ArrayList<>();
         try {
             rawComments = d.
@@ -47,11 +49,20 @@ public class YoutubeManipulation {
         for(WebElement raw : rawComments) {
             ret.add(raw.getText().trim());
         }
+        return ret;
+    }
+
+
+    private static List<String> pass(WebDriver d) throws InterruptedException {
+        clickAllReplies(d);
+
+        List<String> ret = getCommentsByXpath(d);
 
         ScrapeUtils.scrollOnce(d);
         Thread.sleep(ScrapeUtils.WAIT_TIME / 5);
         ScrapeUtils.scrollOnce(d);
         Thread.sleep(ScrapeUtils.WAIT_TIME / 5);
+
         return ret;
     }
 
@@ -64,11 +75,8 @@ public class YoutubeManipulation {
                     webDriver ->
                             ((JavascriptExecutor) webDriver).executeScript
                                     ("return document.readyState").equals("complete"));
-            try {
-                WebElement video = driver.findElement(By.id("id video"));
-                video.click();
-            } catch(Exception ignored) {}
 
+            clickVideo(driver);
             ScrapeUtils.partialScroll(driver);
             Thread.sleep(ScrapeUtils.WAIT_TIME / 5);
 
