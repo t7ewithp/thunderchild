@@ -1,6 +1,7 @@
 package ml.withp.utility;
 
 import ml.withp.model.Tweet;
+import ml.withp.model.YTComment;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
@@ -118,4 +119,20 @@ public class Convert {
     }
     return core;
 }
+
+    public static void dumpYTCommentCSV(List<YTComment> comments, String filename) {
+        try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_8))){
+            CSVPrinter printer = new CSVPrinter(out, CSVFormat.RFC4180);
+            for(YTComment y : comments) {
+                printer.print(y.toString());
+                printer.print(y.getData());
+                printer.print(y.getAuthor());
+                printer.println();
+            }
+            printer.flush();
+            printer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

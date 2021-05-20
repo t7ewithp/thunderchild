@@ -2,6 +2,7 @@ package ml.withp.gui;
 
 import ml.withp.ThunderChildMain;
 import ml.withp.model.Tweet;
+import ml.withp.model.YTComment;
 import ml.withp.utility.Convert;
 import ml.withp.utility.TwitterManipulation;
 import ml.withp.utility.YoutubeManipulation;
@@ -32,8 +33,8 @@ public class YoutubeScrapePanel extends JPanel {
         JButton goButton = new JButton("Begin Scrape");
         goButton.addActionListener(e -> {
             if(!sanityCheck()) {
-                List<String> comments = YoutubeManipulation.scrape(targetVid.getFieldText(), ThunderChildMain.wDriver);
-                Convert.dumpRawCSV(comments, "data/" + targetVid.getFieldText() + ".csv");
+                List<YTComment> comments = YoutubeManipulation.scrape(targetVid.getFieldText(), ThunderChildMain.wDriver);
+                Convert.dumpYTCommentCSV(comments, "data/" + targetVid.getFieldText() + ".csv");
                 Helpers.PopupText("It worked!... Probably?");
             }
         });
