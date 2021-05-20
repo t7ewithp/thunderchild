@@ -7,24 +7,19 @@ Outputs either to CSV or to go1den STM format.
 
 # Method of Operation
 ## Twitter Scrape
-Given a username, a start date, and an end date, we must search a new page for the user's tweets on each day.
+Given a username, a start date, and an end date, Thunder Child searches a new page for the user's tweets on each day via browser selenium.
 
-Then we have to clean up the resulting mess.
-
-Output is to a CSV file where the 1st column is username, 2nd column is date, 3rd column is tweet.
+Output is to a CSV file where the 1st is the tweet itself and other columns are date/author
 
 ## CSVtoSTM
-Stm files are somewhat clunky JSON.
-Because the target column here is always the 3rd column,
-we just grab each 3rd column and make a json entry for it.
+Stm files are somewhat clunky JSON, but given a .csv this will make a .stm of the first column as text messages.
 
-We'll want a csv merge eventually too...
-
+In addition, if one instead selects 2 .csv files, one can merge the 2 into one csv file containing each unique row between them.
 ## Youtube Comment Scrape
-Coming next version.
-
+Given a youtube video id, this will make a .csv of the comments of that video, including replies, (but currently not including comment authors)
 # Other Notes
 Currently only runs on windows because I haven't got selenium set up cross OS. 
 That will be fixed ~soon~
 
-Also it's the ugliest program ever, I'm aware. That will also be fixed at some point.
+# Terms of Use
+Copyright withp; Every piece of java source code in this repository is released under the AGPL V3 with all that that implies.
