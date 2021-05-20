@@ -42,16 +42,16 @@ public class YoutubeManipulation {
         try {
             rawComments = d.
                     findElements(By.xpath("//*[@id=\"content-text\"]"));
-        } catch(Exception e) { }
+        } catch(Exception ignored) { }
 
         for(WebElement raw : rawComments) {
             ret.add(raw.getText());
         }
 
         ScrapeUtils.scrollOnce(d);
-        Thread.sleep(ScrapeUtils.WAIT_TIME / 8);
+        Thread.sleep(ScrapeUtils.WAIT_TIME / 5);
         ScrapeUtils.scrollOnce(d);
-        Thread.sleep(ScrapeUtils.WAIT_TIME / 8);
+        Thread.sleep(ScrapeUtils.WAIT_TIME / 5);
         return ret;
     }
 
@@ -66,11 +66,11 @@ public class YoutubeManipulation {
                                     ("return document.readyState").equals("complete"));
 
             ScrapeUtils.partialScroll(driver);
-            Thread.sleep(ScrapeUtils.WAIT_TIME / 10);
+            Thread.sleep(ScrapeUtils.WAIT_TIME / 5);
 
             WebElement comment_section  = driver.findElement(By.xpath("//*[@id=\"comments\"]"));
             ScrapeUtils.scrollIntoView(driver, comment_section);
-            Thread.sleep(ScrapeUtils.WAIT_TIME / 10);
+            Thread.sleep(ScrapeUtils.WAIT_TIME / 5);
             int oldCommentLen;
             do {
                 oldCommentLen = comments.size();
